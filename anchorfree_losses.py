@@ -22,6 +22,21 @@ def calc_iou(a, b):
     return IoU
 
 
+def box_projection(box, layer):
+    # box: [x, y, w, h]
+    # box_projections = []
+    w, h = box[2], box[3]
+    for i in range(layer):
+        w = w//2
+        h = h//2
+    return [box[0], box[1], w, h]
+
+
+
+
+effctive_factor = 0.2
+ignoring_factor = 0.5
+
 
 class FocalLoss(nn.Module):
     def forward(self, classifications, annotations):
@@ -30,12 +45,24 @@ class FocalLoss(nn.Module):
         batch_size = classifications.shape[0]       # batch_size = 1
         classification_losses = []
 
+        for j in range(batch_size):
+            classification = classifications[j, :, :]
+            bbox_annotation = annotations[j, :, :]
+            bbox_annotation = bbox_annotation[bbox_annotation[:, 4] != -1]
+
+            if bbox_annotation.shape[0] == 0:
+                regression_losses.append(torch.tensor(0).float().cuda())
+                classification_losses.append(torch.tensor(0).float().cuda())
+                continue
+
+            # classification = torch.clamp(classification, 1e-4, 1.0 - 1e-4)
+            
 
 
 
 class IoULoss(nn.Module):
     def forward(self, regressions, annotations):
-
+        # regressions : WxHx4
 
 
 
