@@ -56,8 +56,10 @@ class FocalLoss(nn.Module):
                 continue
 
             # classification = torch.clamp(classification, 1e-4, 1.0 - 1e-4)
-            
 
+            targets = torch.ones(classification.shape) * -1
+            targets = targets.cuda()
+            
 
 
 class IoULoss(nn.Module):
