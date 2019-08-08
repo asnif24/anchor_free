@@ -73,6 +73,7 @@ class RegressionModel(nn.Module):
         self.act4 = nn.ReLU()
 
         self.output = nn.Conv2d(feature_size, 4, kernel_size=3, padding=1)
+        self.output_act = nn.ReLU()
 
     def forward(self, x):
 
@@ -89,6 +90,7 @@ class RegressionModel(nn.Module):
         out = self.act4(out)
 
         out = self.output(out)
+        out = self.output_act(out)
 
         # out is B x C x W x H, with C = 4
         out = out.permute(0, 2, 3, 1)
